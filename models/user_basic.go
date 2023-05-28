@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/amatsuzero/ginchat/utils"
@@ -65,5 +66,10 @@ func FindUserByPhone(phone string) UserBasic {
 func FindUserByNameAndPassword(name, password string) UserBasic {
 	usr := UserBasic{}
 	utils.DB.Where("name = ? AND password = ?", name, password).First(&usr)
+	// token 加密
+	temp := fmt.Sprintf("%d", time.Now().Unix())
+	temp = utils.MD5Encode(temp)
+	usr.Identity = temp
+	UpdateUser(usr)
 	return usr
 }
