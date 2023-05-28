@@ -1,9 +1,13 @@
 package service
 
 import (
+	"fmt"
+	"math/rand"
 	"strconv"
 
 	"github.com/amatsuzero/ginchat/models"
+	"github.com/amatsuzero/ginchat/utils"
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,14 +38,25 @@ func GetUserList(c *gin.Context) {
 func CreateUser(c *gin.Context) {
 	usr := models.UserBasic{}
 	usr.Name = c.Query("name")
-	usr.Password = c.Query("password")
+	pwd := c.Query("password")
 	repwd := c.Query("repassword")
-	if repwd != usr.Password {
+
+	if repwd != pwd {
 		c.JSON(-1, gin.H{
 			"message": "两次密码不一致",
 		})
 		return
 	}
+	usr.Salt = fmt.Sprintf("%06d", rand.Int31())
+	usr.Password = utils.MakePassword(pwd, usr.Salt)
+	empty := models.UserBasic{}
+	if models.FindUserByName(usr.Name) != empty {
+		c.JSON(-1, gin.H{
+			"message": "用户名已经注册!",
+		})
+		return
+	}
+
 	models.CreateUser(usr)
 	c.JSON(200, gin.H{
 		"message": "新增用户成功!",
@@ -84,8 +99,62 @@ func UpdateUser(c *gin.Context) {
 	usr.ID = uint(ID)
 	usr.Name = c.PostForm("name")
 	usr.Password = c.PostForm("password")
+	usr.Email = c.PostForm("email")
+	usr.Phone = c.PostForm("phone")
+
+	if ret, err := govalidator.ValidateStruct(usr); !ret {
+		c.JSON(-1, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
 	models.UpdateUser(usr)
 	c.JSON(200, gin.H{
 		"message": "更新成功！",
+	})
+}
+
+// FindUserByNameAndPassword
+// @Summary 按用户名和密码查找
+// @Tags 用户模块
+// @param name formData string false "用户名"
+// @param password formData string false "密码"
+// @Accept multipart/form-data
+// @Produce json
+// @Success 200 {string} json{"code", "message"}
+// @Router /user/findUserByNameAndPassword [post]
+func FindUserByNameAndPassword(c *gin.Context) {
+	name := c.PostForm("name")
+	pwd := c.PostForm("password")
+
+	model := models.FindUserByName(name)
+	empty := models.UserBasic{}
+	if model == empty {
+		c.JSON(-1, gin.H{
+			"message": "该用户不存在",
+		})
+		return
+	}
+
+	ret := utils.ValidPassword(pwd, model.Salt, model.Password)
+	if !ret {
+		c.JSON(-1, gin.H{
+			"message": "密码不正确",
+		})
+		return
+	}
+
+	pwd = utils.MakePassword(pwd, model.Salt)
+	data := models.FindUserByNameAndPassword(name, pwd)
+	if !ret || data != model {
+		c.JSON(-1, gin.H{
+			"message": "密码不正确",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": data,
 	})
 }

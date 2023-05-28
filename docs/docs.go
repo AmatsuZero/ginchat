@@ -109,6 +109,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/findUserByNameAndPassword": {
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "按用户名和密码查找",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "密码",
+                        "name": "password",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\", \"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/getUserList": {
             "get": {
                 "consumes": [
@@ -160,6 +196,18 @@ const docTemplate = `{
                         "type": "string",
                         "description": "密码",
                         "name": "password",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "邮箱",
+                        "name": "email",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "电话",
+                        "name": "phone",
                         "in": "formData"
                     }
                 ],

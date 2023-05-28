@@ -14,7 +14,12 @@ import (
 
 var DB *gorm.DB
 
-func InitConfig() {
+func init() {
+	initConfig()
+	initMySQL()
+}
+
+func initConfig() {
 	viper.SetConfigName("app")
 	viper.AddConfigPath("config")
 	if err := viper.ReadInConfig(); err != nil {
@@ -24,7 +29,7 @@ func InitConfig() {
 	fmt.Println("config app inited...")
 }
 
-func InitMySQL() {
+func initMySQL() {
 	// 自定义日志模板 打印 SQL 语句
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
