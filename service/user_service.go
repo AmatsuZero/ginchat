@@ -19,7 +19,7 @@ import (
 // @Tags 用户模块
 // @Accept json
 // @Produce json
-// @Success 200 {object} json{"code", "message"}
+// @Success 200 {json} {"code", "message"}
 // @Router /user/getUserList [get]
 func GetUserList(c *gin.Context) {
 	data := models.GetUserList()
@@ -37,7 +37,7 @@ func GetUserList(c *gin.Context) {
 // @param repassword query string false "确认密码"
 // @Accept json
 // @Produce json
-// @Success 200 {object} json{"code", "message"}
+// @Success 200 {json} {"code", "message"}
 // @Router /user/createUser [get]
 func CreateUser(c *gin.Context) {
 	usr := models.UserBasic{}
@@ -76,7 +76,7 @@ func CreateUser(c *gin.Context) {
 // @param id query string false "用户id"
 // @Accept json
 // @Produce json
-// @Success 200 {object} json{"code", "message"}
+// @Success 200 {json} {"code", "message"}
 // @Router /user/deleteUser [get]
 func DeleteUser(c *gin.Context) {
 	usr := models.UserBasic{}
@@ -100,7 +100,7 @@ func DeleteUser(c *gin.Context) {
 // @param phone formData string false "电话"
 // @Accept multipart/form-data
 // @Produce json
-// @Success 200 {object} json{"code", "message"}
+// @Success 200 {json} {"code", "message"}
 // @Router /user/updateUser [post]
 func UpdateUser(c *gin.Context) {
 	usr := models.UserBasic{}
@@ -133,7 +133,7 @@ func UpdateUser(c *gin.Context) {
 // @param password formData string false "密码"
 // @Accept multipart/form-data
 // @Produce json
-// @Success 200 {object} json{"code", "message"}
+// @Success 200 {json} {"code", "message"}
 // @Router /user/findUserByNameAndPassword [post]
 func FindUserByNameAndPassword(c *gin.Context) {
 	name := c.PostForm("name")

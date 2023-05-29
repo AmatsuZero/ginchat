@@ -37,7 +37,7 @@ paths:
         "200":
           description: code", "message"}
           schema:
-            type: string
+            type: json
       summary: 新增用户
       tags:
       - 用户模块
@@ -56,7 +56,7 @@ paths:
         "200":
           description: code", "message"}
           schema:
-            type: string
+            type: json
       summary: 删除用户
       tags:
       - 用户模块
@@ -79,7 +79,7 @@ paths:
         "200":
           description: code", "message"}
           schema:
-            type: string
+            type: json
       summary: 按用户名和密码查找
       tags:
       - 用户模块
@@ -93,7 +93,7 @@ paths:
         "200":
           description: code", "message"}
           schema:
-            type: string
+            type: json
       summary: 所有用户
       tags:
       - 用户模块
@@ -128,7 +128,7 @@ paths:
         "200":
           description: code", "message"}
           schema:
-            type: string
+            type: json
       summary: 修改用户
       tags:
       - 用户模块
